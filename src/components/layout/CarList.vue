@@ -4,9 +4,8 @@ import type { Car } from '@/types/car';
 import { useCarsStore } from '@/stores/manageCars';
 import IconDelete from '@/components/icons/IconDelete.vue';
 import IconEdit from '@/components/icons/IconEdit.vue';
-import ModalComponent from './ModalComponent.vue';
 import EditCarModal from './EditCarModal.vue';
-import { useDarkMode } from '@/utils/composables/darkMode';
+import ConfirmModal from './ConfirmModal.vue';
 
 const props = defineProps({
   modelValue: {
@@ -21,10 +20,9 @@ const props = defineProps({
 const emit = defineEmits(['update:modelValue']);
 
 const carStore = useCarsStore();
-const { isDarkMode } = useDarkMode();
 
 const isModalOpen = ref<boolean>(false);
-const isConcludeModalOpen = ref<boolean>(false);
+const isConfirmOpen = ref<boolean>(false);
 const selectedItem = ref(0);
 let carEdit: Car = reactive({
   id: 0,
@@ -42,31 +40,19 @@ const cars = computed({
   },
 });
 
-function confirmConclusion(index: number) {
-  selectedItem.value = index;
-
-  isConcludeModalOpen.value = true;
-}
-
-function editItem(index: number) {
+function editCar(index: number) {
   isModalOpen.value = true;
   carEdit = { ...cars.value[index] };
 }
 
-function removeItem(index?: number) {
-  if (index) {
-    carStore.removeCar(index);
-    return;
-  }
-
+function removeCarAndCloseModal() {
   carStore.removeCar(selectedItem.value);
+  isConfirmOpen.value = false;
 }
 
-function concludeItem() {
-  carStore.addNewCarItem(selectedItem.value);
-  isConcludeModalOpen.value = false;
-
-  removeItem();
+function confirmRemoveCar(index: number) {
+  isConfirmOpen.value = true;
+  selectedItem.value = index;
 }
 </script>
 
@@ -107,22 +93,16 @@ function concludeItem() {
         >
           <button
             class="bg-blue-500 hover:bg-blue-700 text-white font-bold p-1 rounded-full"
-            @click="editItem(index)"
+            @click="editCar(index)"
           >
             <IconEdit />
           </button>
           <button
             class="bg-red-600 hover:bg-red-500 text-white font-bold p-1 rounded-full"
-            @click="removeItem(index)"
+            @click="confirmRemoveCar(index)"
           >
             <IconDelete />
           </button>
-          <!-- <button
-          class="bg-green-600 hover:bg-green-500 text-white font-bold p-1 rounded-full"
-          @click="confirmConclusion(index)"
-        >
-          <IconCheck />
-        </button> -->
         </div>
       </li>
     </TransitionGroup>
@@ -140,31 +120,11 @@ function concludeItem() {
     v-model:is-modal-open="isModalOpen"
   />
 
-  <ModalComponent v-model="isConcludeModalOpen">
-    <div
-      class="card w-[300px] dark:bg-slate-700 dark:text-white"
-      :class="isDarkMode ? 'dark' : ''"
-    >
-      <div class="py-2 text-center">
-        <p>Tem certeza que deseja finalizar o item?</p>
-      </div>
-
-      <div class="pt-2 flex justify-between">
-        <button
-          class="bg-red-600 hover:bg-red-500 text-white font-bold py-2 px-4 rounded"
-          @click="isConcludeModalOpen = false"
-        >
-          Cancelar
-        </button>
-        <button
-          class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-          @click="concludeItem"
-        >
-          Confirmar
-        </button>
-      </div>
-    </div>
-  </ModalComponent>
+  <ConfirmModal
+    v-model="isConfirmOpen"
+    message="Tem certeza que deseja excluir este veículo?"
+    @confirm-action="removeCarAndCloseModal"
+  />
 </template>
 
 <style scoped>
