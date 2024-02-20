@@ -8,6 +8,16 @@ const router = createRouter({
       name: 'home',
       component: () => import('@/views/HomeView.vue'),
     },
+    {
+      path: '/edit',
+      name: 'edit',
+      component: () => import('@/views/HomeView.vue'),
+    },
+    {
+      path: '/add',
+      name: 'add',
+      component: () => import('@/views/HomeView.vue'),
+    },
     // {
     //   path: '/todo-list',
     //   name: 'todo-list',

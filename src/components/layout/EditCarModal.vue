@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { computed, ref, reactive } from 'vue';
+import { computed, reactive, watch } from 'vue';
 import type { PropType } from 'vue';
 import type { Car } from '@/types/car';
 import { useCarsStore } from '@/stores/manageCars';
+import { useRouter } from 'vue-router';
 import InputCompnent from '@/components/ui/InputComponent.vue';
 import ModalComponent from '@/components/layout/ModalComponent.vue';
 
@@ -19,6 +20,7 @@ const props = defineProps({
 const emit = defineEmits(['update:modalValue', 'update:isModalOpen']);
 
 const carStore = useCarsStore();
+const router = useRouter();
 const inputsErrors = reactive({
   model: {
     hasError: false,
@@ -50,6 +52,21 @@ const openModal = computed({
   set(newValue) {
     emit('update:isModalOpen', newValue);
   },
+});
+
+watch(openModal, (newValue) => {
+  if (newValue) {
+    router.replace({
+      path: '/edit',
+      query: { car: car.value.id },
+    });
+
+    return;
+  }
+
+  router.replace({
+    path: '/',
+  });
 });
 
 function isValidModel() {
@@ -130,7 +147,7 @@ function validateAndSubmit(e: Event) {
   <ModalComponent v-model="openModal">
     <div class="card w-[400px] dark:bg-slate-700 dark:text-white">
       <div>
-        <h3 class="text-2xl">Editar carro</h3>
+        <h3 class="text-2xl">Editar Veículo</h3>
       </div>
       <form @submit="validateAndSubmit">
         <div class="pt-2">
