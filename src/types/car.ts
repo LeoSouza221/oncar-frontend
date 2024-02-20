@@ -1,5 +1,5 @@
 interface Car {
-  id: string;
+  id: string | number;
   model: string;
   color: string;
   brand: string;

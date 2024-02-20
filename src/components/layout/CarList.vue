@@ -4,8 +4,8 @@ import type { Car } from '@/types/car';
 import { useCarsStore } from '@/stores/manageCars';
 import IconDelete from '@/components/icons/IconDelete.vue';
 import IconEdit from '@/components/icons/IconEdit.vue';
-import ModalComponent from '@/components/ModalComponent.vue';
-import EdiCartModal from './EdiCartModal.vue';
+import ModalComponent from './ModalComponent.vue';
+import EditCarModal from './EditCarModal.vue';
 import { useDarkMode } from '@/utils/composables/darkMode';
 
 const props = defineProps({
@@ -23,12 +23,17 @@ const emit = defineEmits(['update:modelValue']);
 const carStore = useCarsStore();
 const { isDarkMode } = useDarkMode();
 
-const isModalOpen = ref(false);
-const isConcludeModalOpen = ref(false);
+const isModalOpen = ref<boolean>(false);
+const isConcludeModalOpen = ref<boolean>(false);
 const selectedItem = ref(0);
-let todoEdit: Car = reactive({ item: '', id: 0 });
+let carEdit: Car = reactive({
+  id: 0,
+  model: '',
+  color: '',
+  brand: '',
+});
 
-const todoItems = computed({
+const cars = computed({
   get() {
     return props.modelValue;
   },
@@ -45,7 +50,7 @@ function confirmConclusion(index: number) {
 
 function editItem(index: number) {
   isModalOpen.value = true;
-  todoEdit = { ...todoItems.value[index] };
+  carEdit = { ...cars.value[index] };
 }
 
 function removeItem(index?: number) {
@@ -66,52 +71,62 @@ function concludeItem() {
 </script>
 
 <template>
-  <TransitionGroup
-    name="list"
-    tag="ul"
-    class="py-2 w-full dark:text-white"
-    v-if="todoItems?.length"
+  <div
+    v-if="cars?.length"
+    class="h-[300px] overflow-y-auto overflow-x-hidden"
   >
-    <li
-      v-for="(todoItem, index) in todoItems"
-      :key="index"
-      class="grid grid-cols-12 gap-2 py-1 items-center"
+    <TransitionGroup
+      name="list"
+      tag="ul"
+      class="py-2 w-full dark:text-white"
     >
-      <div
-        class="col-span-9 text-start"
-        :class="`col-span-${isConclude ? '12' : '9'}`"
+      <li
+        v-for="(car, index) in cars"
+        :key="index"
+        class="grid grid-cols-12 gap-2 py-2 items-center"
       >
-        <span
-          class="text-sm"
-          :class="isConclude ? 'line-through' : ''"
-          >{{ todoItem.item }}</span
+        <div
+          class="col-span-9 text-start"
+          :class="`col-span-${isConclude ? '12' : '9'}`"
         >
-      </div>
-      <div
-        v-if="!isConclude"
-        class="col-span-3 flex justify-end gap-2"
-      >
-        <button
-          class="bg-blue-500 hover:bg-blue-700 text-white font-bold p-1 rounded-full"
-          @click="editItem(index)"
+          <span class="text-base font-semibold">
+            {{ car.model }}
+          </span>
+          <div>
+            <span
+              class="text-sm"
+              :class="isConclude ? 'line-through' : ''"
+            >
+              {{ car.brand }} - {{ car.color }}
+            </span>
+          </div>
+        </div>
+        <div
+          v-if="!isConclude"
+          class="col-span-3 flex justify-end gap-2"
         >
-          <IconEdit />
-        </button>
-        <button
-          class="bg-red-600 hover:bg-red-500 text-white font-bold p-1 rounded-full"
-          @click="removeItem(index)"
-        >
-          <IconDelete />
-        </button>
-        <!-- <button
+          <button
+            class="bg-blue-500 hover:bg-blue-700 text-white font-bold p-1 rounded-full"
+            @click="editItem(index)"
+          >
+            <IconEdit />
+          </button>
+          <button
+            class="bg-red-600 hover:bg-red-500 text-white font-bold p-1 rounded-full"
+            @click="removeItem(index)"
+          >
+            <IconDelete />
+          </button>
+          <!-- <button
           class="bg-green-600 hover:bg-green-500 text-white font-bold p-1 rounded-full"
           @click="confirmConclusion(index)"
         >
           <IconCheck />
         </button> -->
-      </div>
-    </li>
-  </TransitionGroup>
+        </div>
+      </li>
+    </TransitionGroup>
+  </div>
 
   <div
     v-else
@@ -120,8 +135,8 @@ function concludeItem() {
     <p>Não há itens</p>
   </div>
 
-  <EdiCartModal
-    v-model:modal-value="todoEdit"
+  <EditCarModal
+    v-model:modal-value="carEdit"
     v-model:is-modal-open="isModalOpen"
   />
 

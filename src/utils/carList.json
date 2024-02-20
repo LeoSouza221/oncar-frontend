@@ -1,0 +1,22 @@
+{
+  "cars": [
+    {
+      "id": 1,
+      "model": "Uno de escada",
+      "color": "Branco",
+      "brand": "Fiat"
+    },
+    {
+      "id": 2,
+      "model": "Golf Sapão",
+      "color": "Prata",
+      "brand": "Volkswagen"
+    },
+    {
+      "id": 3,
+      "model": "Gol Quadrado",
+      "color": "VInho",
+      "brand": "Volkswagen"
+    }
+  ]
+}
