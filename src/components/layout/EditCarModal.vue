@@ -147,11 +147,11 @@ function validateAndSubmit(e: Event) {
   <ModalComponent v-model="openModal">
     <div class="card w-[400px] dark:bg-slate-700 dark:text-white">
       <div>
-        <h3 class="text-2xl">Editar Veículo</h3>
+        <h3 class="text-2xl text-slate-700 dark:text-white">Editar Veículo</h3>
       </div>
       <form @submit="validateAndSubmit">
         <div class="pt-2">
-          <label>
+          <label class="text-slate-700 dark:text-white">
             Modelo
             <InputCompnent
               v-model="car.model"
@@ -162,7 +162,7 @@ function validateAndSubmit(e: Event) {
         </div>
 
         <div class="grid grid-cols-2 gap-2">
-          <label>
+          <label class="text-slate-700 dark:text-white">
             Marca
             <InputCompnent
               v-model="car.brand"
@@ -170,7 +170,7 @@ function validateAndSubmit(e: Event) {
               :error-message="inputsErrors.brand.message"
             />
           </label>
-          <label>
+          <label class="text-slate-700 dark:text-white">
             Cor
             <InputCompnent
               v-model="car.color"

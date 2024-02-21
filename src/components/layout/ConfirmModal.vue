@@ -33,7 +33,7 @@ const isOpen = computed({
       class="card w-[300px] dark:bg-slate-700 dark:text-white"
       :class="isDarkMode ? 'dark' : ''"
     >
-      <div class="py-2 text-center">
+      <div class="py-2 text-center text-slate-700 dark:text-white">
         <p>{{ message }}</p>
       </div>
 

@@ -32,11 +32,19 @@ let carEdit: Car = reactive({
   brand: '',
 });
 
-onMounted(() => {
-  if (route.path === '/add') {
-    isModalOpen.value = true;
-  }
-});
+// onMounted(() => {
+//   if (route.path === '/edit') {
+//     const { car } = route.query;
+
+//     const position = cars.value.findIndex((itemCar) => {
+//       return itemCar.id?.toString() === car;
+//     });
+
+//     if (position >= 0) {
+//       editCar(position);
+//     }
+//   }
+// });
 
 const cars = computed({
   get() {
