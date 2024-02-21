@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { computed, ref, reactive } from 'vue';
-import type { Car } from '@/types/car';
+import { computed, ref, reactive, onMounted } from 'vue';
 import { useCarsStore } from '@/stores/manageCars';
+import { useRoute } from 'vue-router';
+import type { Car } from '@/types/car';
 import IconDelete from '@/components/icons/IconDelete.vue';
 import IconEdit from '@/components/icons/IconEdit.vue';
 import EditCarModal from './EditCarModal.vue';
@@ -20,7 +21,7 @@ const props = defineProps({
 const emit = defineEmits(['update:modelValue']);
 
 const carStore = useCarsStore();
-
+const route = useRoute();
 const isModalOpen = ref<boolean>(false);
 const isConfirmOpen = ref<boolean>(false);
 const selectedItem = ref(0);
@@ -29,6 +30,12 @@ let carEdit: Car = reactive({
   model: '',
   color: '',
   brand: '',
+});
+
+onMounted(() => {
+  if (route.path === '/add') {
+    isModalOpen.value = true;
+  }
 });
 
 const cars = computed({
@@ -75,12 +82,12 @@ function confirmRemoveCar(index: number) {
           class="col-span-9 text-start"
           :class="`col-span-${isConclude ? '12' : '9'}`"
         >
-          <span class="text-base font-semibold">
+          <span class="text-base font-semibold text-slate-700 dark:text-white">
             {{ car.model }}
           </span>
           <div>
             <span
-              class="text-sm"
+              class="text-sm text-slate-700 dark:text-white"
               :class="isConclude ? 'line-through' : ''"
             >
               {{ car.brand }} - {{ car.color }}
