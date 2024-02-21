@@ -1,79 +1,52 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-// import type { TodoItem } from '@/types/todoItem';
+import { ref, onMounted, computed } from 'vue';
 import { useCar } from '@/utils/composables/carsComposable';
+import { useRoute } from 'vue-router';
 import CarList from '@/components/layout/CarList.vue';
-// import InputComponent from '@/components/InputComponent.vue';
+import AddCarModal from '@/components/layout/AddCarModal.vue';
+import InputComponent from '@/components/ui/InputComponent.vue';
 
-const isClear = ref<boolean>(false);
-const inputError = ref<boolean>(true);
-const inputErrorMessage = ref<string>('');
-const newCar = ref<string>('');
-const { carStore, cars } = useCar();
+const { cars } = useCar();
+const route = useRoute();
+const isModalOpen = ref(false);
+const search = ref('');
 
-function validateText() {
-  const isOnlySpaces = newCar.value.replace(/\s/g, '').length;
-
-  if (!newCar.value.length && !isClear.value) {
-    inputError.value = true;
-    inputErrorMessage.value = 'Digite pelo menos 1 caracter';
-
-    return false;
+onMounted(() => {
+  if (route.path === '/add') {
+    isModalOpen.value = true;
   }
+});
 
-  if (!isOnlySpaces && !isClear.value) {
-    inputError.value = true;
-    inputErrorMessage.value = 'Itens não devem conter somente espaços';
-
-    return false;
-  }
-
-  inputError.value = false;
-  isClear.value = false;
-
-  return true;
-}
-
-function addNewTodoItem() {
-  isClear.value = false;
-
-  const isValid = validateText();
-
-  if (!isValid) {
-    return;
-  }
-
-  // const newTodoItem: TodoItem = {
-  //   item: newCar.value,
-  //   id: new Date().getTime(),
-  // };
-
-  // todoStore.addNewTodoItem(newTodoItem);
-  clearInput();
-}
-
-function clearInput() {
-  newCar.value = '';
-  isClear.value = true;
-}
+const carsList = computed(() => {
+  return cars.value.filter((car) =>
+    JSON.stringify(car).toString().toLowerCase().includes(search.value.toLowerCase()),
+  );
+});
 </script>
 
 <template>
   <div class="custom-height flex justify-center items-center p-2">
     <div class="card w-[500px] dark:bg-slate-700 dark:text-white">
-      <div class="flex justify-between gap-4">
-        <h3 class="text-lg">Listagem de carros</h3>
+      <div>
+        <h3 class="text-lg font-bold text-slate-700 dark:text-white"> Listagem de carros </h3>
+      </div>
+      <div class="flex items-start gap-4">
+        <InputComponent
+          v-model="search"
+          placeholder="Buscar veículo"
+        />
         <button
           class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded h-10"
-          @click="addNewTodoItem"
+          @click="isModalOpen = true"
         >
           Adicionar
         </button>
       </div>
 
       <div class="py-2">
-        <CarList v-model="cars" />
+        <CarList v-model="carsList" />
       </div>
     </div>
+    <AddCarModal v-model="isModalOpen" />
   </div>
 </template>

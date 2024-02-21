@@ -3,10 +3,10 @@
     class="fixed bottom-0 w-full px-4 py-2 bg-slate-50 h-14 flex justify-between items-center border-t border-neutral-200 dark:bg-slate-700 dark:text-white dark:border-slate-500"
   >
     <div>
-      <span class="text-base">Leonardo Felipe de Souza</span>
+      <span class="text-base text-slate-700 dark:text-white">Leonardo Felipe de Souza</span>
     </div>
     <ul class="flex gap-4">
-      <li>
+      <li class="text-slate-700 dark:text-white">
         <a
           href="https://github.com/LeoSouza221"
           target="_blank"
@@ -24,7 +24,7 @@
           </svg>
         </a>
       </li>
-      <li>
+      <li class="text-slate-700 dark:text-white">
         <a
           href="https://www.linkedin.com/in/leonardo-de-souza-a75557156/"
           target="_blank"

@@ -16,7 +16,7 @@ const props = defineProps(['toggleDark', 'isDarkMode']);
     />
 
     <div class="flex justify-center w-full items-center">
-      <h2 class="text-white text-2xl">Todo List</h2>
+      <h2 class="text-white text-2xl">OnCar</h2>
     </div>
 
     <div class="h-full flex items-center gap-4 text-white">
