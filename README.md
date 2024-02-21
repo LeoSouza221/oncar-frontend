@@ -1,5 +1,7 @@
 # oncar
 
+![image](https://github.com/LeoSouza221/oncar-frontend/assets/39174217/9c887564-44e5-43ff-9dc3-2b0b32213449)
+
 [Demo](https://leosouza221.github.io/oncar-frontend/)
 
 Projeto realizado utilizando VueJs como solução, por ter mais experiência com a mesma, para mim seria mais rápido e fácil, mas que cumpre todos os requisitos solicitados,
