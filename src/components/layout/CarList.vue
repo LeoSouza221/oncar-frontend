@@ -1,12 +1,14 @@
 <script setup lang="ts">
-import { computed, ref, reactive, onMounted } from 'vue';
+import { computed, ref, reactive } from 'vue';
 import { useCarsStore } from '@/stores/manageCars';
-import { useRoute } from 'vue-router';
 import type { Car } from '@/types/car';
 import IconDelete from '@/components/icons/IconDelete.vue';
 import IconEdit from '@/components/icons/IconEdit.vue';
+import IconSimulation from '@/components/icons/IconSimulation.vue';
+import SimulationModal from '@/components/layout/SimulationModal.vue';
 import EditCarModal from './EditCarModal.vue';
 import ConfirmModal from './ConfirmModal.vue';
+import TooltipComponent from '../ui/TooltipComponent.vue';
 
 const props = defineProps({
   modelValue: {
@@ -21,9 +23,9 @@ const props = defineProps({
 const emit = defineEmits(['update:modelValue']);
 
 const carStore = useCarsStore();
-const route = useRoute();
 const isModalOpen = ref<boolean>(false);
 const isConfirmOpen = ref<boolean>(false);
+const isSimulationOpen = ref<boolean>(false);
 const selectedItem = ref(0);
 let carEdit: Car = reactive({
   id: 0,
@@ -31,20 +33,6 @@ let carEdit: Car = reactive({
   color: '',
   brand: '',
 });
-
-// onMounted(() => {
-//   if (route.path === '/edit') {
-//     const { car } = route.query;
-
-//     const position = cars.value.findIndex((itemCar) => {
-//       return itemCar.id?.toString() === car;
-//     });
-
-//     if (position >= 0) {
-//       editCar(position);
-//     }
-//   }
-// });
 
 const cars = computed({
   get() {
@@ -68,6 +56,11 @@ function removeCarAndCloseModal() {
 function confirmRemoveCar(index: number) {
   isConfirmOpen.value = true;
   selectedItem.value = index;
+}
+
+function simulateModal(index: number) {
+  isSimulationOpen.value = true;
+  carEdit = { ...cars.value[index] };
 }
 </script>
 
@@ -106,18 +99,30 @@ function confirmRemoveCar(index: number) {
           v-if="!isConclude"
           class="col-span-3 flex justify-end gap-2"
         >
-          <button
-            class="bg-blue-500 hover:bg-blue-700 text-white font-bold p-1 rounded-full"
-            @click="editCar(index)"
-          >
-            <IconEdit />
-          </button>
-          <button
-            class="bg-red-600 hover:bg-red-500 text-white font-bold p-1 rounded-full"
-            @click="confirmRemoveCar(index)"
-          >
-            <IconDelete />
-          </button>
+          <TooltipComponent message="Editar">
+            <button
+              class="bg-blue-500 hover:bg-blue-700 text-white font-bold p-1 rounded-full"
+              @click="editCar(index)"
+            >
+              <IconEdit />
+            </button>
+          </TooltipComponent>
+          <TooltipComponent message="Deletar">
+            <button
+              class="bg-red-600 hover:bg-red-500 text-white font-bold p-1 rounded-full"
+              @click="confirmRemoveCar(index)"
+            >
+              <IconDelete />
+            </button>
+          </TooltipComponent>
+          <TooltipComponent message="Simular">
+            <button
+              class="bg-green-600 hover:bg-green-500 text-white font-bold p-1 rounded-full"
+              @click="simulateModal(index)"
+            >
+              <IconSimulation class="w-3 h-3" />
+            </button>
+          </TooltipComponent>
         </div>
       </li>
     </TransitionGroup>
@@ -139,6 +144,11 @@ function confirmRemoveCar(index: number) {
     v-model="isConfirmOpen"
     message="Tem certeza que deseja excluir este veículo?"
     @confirm-action="removeCarAndCloseModal"
+  />
+
+  <SimulationModal
+    v-model="isSimulationOpen"
+    :car="carEdit"
   />
 </template>
 

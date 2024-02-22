@@ -18,11 +18,11 @@ const router = createRouter({
       name: 'add',
       component: () => import('@/views/HomeView.vue'),
     },
-    // {
-    //   path: '/todo-list',
-    //   name: 'todo-list',
-    //   component: () => import('@/views/TodoList.vue'),
-    // },
+    {
+      path: '/simulation',
+      name: 'simulation',
+      component: () => import('@/views/HomeView.vue'),
+    },
     {
       path: '/:pathMatch(.*)*',
       name: 'not-found',
