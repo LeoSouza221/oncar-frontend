@@ -6,7 +6,7 @@ import { useRouter } from 'vue-router';
 import InputCompnent from '@/components/ui/InputComponent.vue';
 import ModalComponent from '@/components/layout/ModalComponent.vue';
 
-const { modelValue } = defineProps({
+const props = defineProps({
   modelValue: {
     type: Boolean,
     required: true,
@@ -21,6 +21,7 @@ const emit = defineEmits(['update:modelValue']);
 const router = useRouter();
 const isSimulate = ref(false);
 const result = ref('');
+const score = ref(0);
 const data = ref({
   name: '',
   document: '',
@@ -38,7 +39,7 @@ const inputsErrors = reactive({
 
 const isOpen = computed({
   get() {
-    return modelValue;
+    return props.modelValue;
   },
   set(newValue) {
     emit('update:modelValue', newValue);
@@ -97,21 +98,24 @@ function isValidDocument() {
 
 function clearAndCloseModal() {
   isOpen.value = false;
+  isSimulate.value = false;
+  data.value.document = '';
+  data.value.name = '';
   inputsErrors.name.hasError = false;
   inputsErrors.document.hasError = false;
 }
 
 function simulateFinancial() {
   isSimulate.value = true;
-  const random = Math.floor(Math.random() * (1000 - 0 + 1) + 0);
+  score.value = Math.floor(Math.random() * (1000 - 0 + 1) + 0);
 
-  if (random < 300) {
+  if (score.value < 300) {
     result.value = 'Reprovado';
-  } else if (random >= 300 && random < 600) {
+  } else if (score.value >= 300 && score.value < 600) {
     result.value = '70% de entrada, 30% do comprometimento da renda';
-  } else if (random >= 600 && random < 800) {
+  } else if (score.value >= 600 && score.value < 800) {
     result.value = '50% de entrada, 25% do comprometimento da renda';
-  } else if (random >= 800 && random < 950) {
+  } else if (score.value >= 800 && score.value < 950) {
     result.value = '30% de entrada, 20% do comprometimento da renda';
   } else {
     result.value = '100% de financiamento, taxa zero.';
@@ -175,11 +179,22 @@ function validateAndSubmit(e: Event) {
         </div>
       </form>
 
-      <div>
-        <span class="text-lg">Sua simulação para o {{ car.model }} - {{ car.color }} foi:</span>
-        <span>{{ result }}</span>
+      <div
+        v-else
+        class="py-2 text-slate-700 dark:text-white"
+      >
+        <span class="text-center text-lg">
+          Sr(a) {{ data.name }} sua simulação para o {{ car.model }} - {{ car.color }} foi:
+        </span>
 
-        <div class="pt-2 flex justify-between">
+        <p class="font-semibold"
+          >- Score: <span class="font-normal">{{ score }}</span></p
+        >
+        <p class="font-semibold">
+          - Resultado: <span class="font-normal">{{ result }}</span></p
+        >
+
+        <div class="pt-4 flex justify-between">
           <button
             class="bg-red-600 hover:bg-red-500 text-white font-bold py-2 px-4 rounded"
             @click="clearAndCloseModal"
