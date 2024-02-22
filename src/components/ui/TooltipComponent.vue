@@ -8,18 +8,19 @@ defineProps({
 </script>
 
 <template>
-  <div :class="$style.hasTooltip">
+  <div class="hasTooltip">
     <slot />
-    <span :class="$style.tooltip"> {{ message }} </span>
+    <span class="tooltip invisible text-sm bg-slate-600 p-1 rounded"> {{ message }} </span>
   </div>
 </template>
 
-<style module lang="postcss">
+<style>
 .tooltip {
-  @apply invisible absolute text-sm bg-slate-600 p-1 rounded;
+  position: absolute;
 }
 
 .hasTooltip:hover .tooltip {
-  @apply visible z-50;
+  z-index: 50;
+  visibility: visible;
 }
 </style>
