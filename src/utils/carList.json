@@ -15,8 +15,14 @@
     {
       "id": 3,
       "model": "Gol Quadrado",
-      "color": "VInho",
+      "color": "Vinho",
       "brand": "Volkswagen"
+    },
+    {
+      "id": 3,
+      "model": "Skyline do Bryan",
+      "color": "Prata",
+      "brand": "Nissan"
     }
   ]
 }
