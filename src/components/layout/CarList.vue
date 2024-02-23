@@ -5,7 +5,7 @@ import type { Car } from '@/types/car';
 import IconDelete from '@/components/icons/IconDelete.vue';
 import IconEdit from '@/components/icons/IconEdit.vue';
 import IconSimulation from '@/components/icons/IconSimulation.vue';
-import SimulationModal from '@/components/layout/SimulationModal.vue';
+import SimulateModal from '@/components/layout/SimulateModal.vue';
 import EditCarModal from './EditCarModal.vue';
 import ConfirmModal from './ConfirmModal.vue';
 import TooltipComponent from '../ui/TooltipComponent.vue';
@@ -146,7 +146,7 @@ function simulateModal(index: number) {
     @confirm-action="removeCarAndCloseModal"
   />
 
-  <SimulationModal
+  <SimulateModal
     v-model="isSimulationOpen"
     :car="carEdit"
   />
